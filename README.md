@@ -205,7 +205,7 @@ Halyn intercepts any agentic system. The agent framework doesn't matter.
 | **AutoGen** | API calls intercepted automatically |
 | **CrewAI** | API calls intercepted automatically |
 | **Semantic Kernel** | API calls intercepted automatically |
-| **BeeQ** | Native AAP integration |
+| **Any AAP client** | Native AAP integration |
 | **Any MCP agent** | MCP server passthrough |
 | **Any A2A agent** | Network-level interception |
 | **Any OpenAI-compatible API** | Universal proxy compatibility |
