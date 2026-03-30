@@ -50,7 +50,7 @@ Every action produces a cryptographic proof stored locally. Not in the cloud. No
 **Option 1 — pip** (Python 3.10+):
 
 ```bash
-pip install halyn==2.1.3
+pip install halyn==2.2.4
 halyn serve
 ```
 
@@ -68,23 +68,33 @@ The curl script verifies your Python version and asks permission before doing an
 ## Quick Start
 
 ```python
-from halyn import ControlPlane
+from halyn.control_plane import ControlPlane
+from halyn.config import HalynConfig
 
-# Start the governance layer
-gov = ControlPlane()
-gov.serve()  # dashboard at localhost:7420
+# Start the control plane (or run `halyn serve` from CLI)
+cp = ControlPlane(HalynConfig())
 
-# Register an agent
-agent = gov.register_agent(
-    name="claude-cowork",
-    provider="anthropic",
-    autonomy_level=2,  # executor — reversible actions only
-)
+# Every node action passes through the pipeline:
+# Consent → Shield → Execute → Audit
+import asyncio
+async def main():
+    await cp.start()
+    result = await cp.execute(
+        "myserver.observe",
+        {"channels": "cpu,ram"},
+        user_id="me",
+        intent_text="Check server load",
+    )
+    print(result.ok)     # True
+    print(result.data)   # {"cpu": 42.1, "ram": 67.3}
 
-# Every agent action is intercepted and recorded
-result = agent.act("read_file", "/docs/contract.pdf")
-print(result.proof)    # sha256:a3f2e1...
-print(result.allowed)  # True
+    # Audit chain — cryptographic proof of every action
+    entries = cp.audit.query(limit=5)
+    valid, count, msg = cp.audit.verify_chain()
+    print(msg)           # "Chain valid (N entries)"
+    await cp.stop()
+
+asyncio.run(main())
 ```
 
 ---
