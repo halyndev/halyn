@@ -14,7 +14,7 @@ observe → act → shield → audit → intent.
 
 import asyncio
 import tempfile
-from nrp import (
+from halyn._nrp import (
     NRPDriver, NRPManifest, NRPId,
     ChannelSpec, ActionSpec, ShieldRule, ShieldType, EventBus,
 )
