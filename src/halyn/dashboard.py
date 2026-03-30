@@ -181,6 +181,29 @@ body{background:var(--bg);color:var(--fg);font-family:var(--font);height:100vh;d
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── MOBILE ─────────────────────────────────────────── */
+@media(max-width:700px){
+  body{height:auto;overflow:auto}
+  .topbar{padding:.5rem .75rem}
+  .version{display:none}
+  #estop-btn{font-size:.65rem;padding:.2rem .5rem}
+  .statstrip{flex-wrap:wrap}
+  .stat{flex:1 1 33%;min-width:0;padding:.5rem .6rem;border-bottom:1px solid var(--border)}
+  .stat .v{font-size:1.1rem}
+  .stat .l{font-size:.6rem}
+  .main{grid-template-columns:1fr;overflow:visible}
+  .col{border-right:none;border-bottom:1px solid var(--border);overflow:visible}
+  .col:last-child{border-bottom:none}
+  .panel{overflow:visible}
+  .panel-body{overflow:visible;max-height:none}
+  .audit-row{grid-template-columns:50px 1fr 45px;font-size:.68rem}
+  .audit-row .hash{display:none}
+  .cmd-input-row{flex-direction:column;gap:.4rem}
+  .cmd-input{width:100%}
+  .cmd-send{width:100%;text-align:center}
+  .cmd-history{min-height:120px;max-height:200px;overflow-y:auto}
+}
 </style>
 </head>
 <body>
