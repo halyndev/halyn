@@ -1,0 +1,74 @@
+# Halyn Configuration
+# Copy to halyn.yml and customize
+
+version: "1"
+
+server:
+  host: "0.0.0.0"
+  port: 8935
+  api_key: "${HALYN_API_KEY}"
+
+llm:
+  provider: "claude"
+  model: "claude-sonnet-4-6"
+  api_key: "${ANTHROPIC_API_KEY}"
+
+# 5 autonomy levels per domain
+# 0=Manual  1=Supervised  2=Guided  3=Autonomous  4=Full Auto
+domains:
+  physical:
+    level: 1
+    nodes: ["robot/*", "drone/*", "arm/*", "vehicle/*"]
+    confirm: ["move", "pick", "deploy", "emergency_stop"]
+
+  financial:
+    level: 0
+    nodes: ["finance/*", "bank/*", "payment/*"]
+    blocked: ["delete", "drop"]
+
+  infrastructure:
+    level: 2
+    nodes: ["server/*", "cloud/*", "docker/*"]
+    confirm: ["restart", "deploy", "scale_down", "delete"]
+
+  monitoring:
+    level: 4
+    nodes: ["sensor/*", "monitor/*", "metric/*"]
+    max_actions_per_hour: 10000
+
+  home:
+    level: 3
+    nodes: ["home/*"]
+    blocked: ["unlock_door"]
+
+  communication:
+    level: 1
+    nodes: ["email/*", "slack/*", "telegram/*"]
+    confirm: ["send", "post", "reply"]
+    max_actions_per_hour: 50
+
+# Nodes to connect at startup
+nodes:
+  - id: "nrp://infra/server/prod-1"
+    driver: "ssh"
+    host: "10.0.1.10"
+    user: "deploy"
+    key: "~/.ssh/prod_key"
+
+  - id: "nrp://cloud/api/stripe"
+    driver: "http_auto"
+    base_url: "https://api.stripe.com/v1"
+    auth_token: "Bearer ${STRIPE_API_KEY}"
+
+  - id: "nrp://cloud/api/github"
+    driver: "http_auto"
+    base_url: "https://api.github.com"
+    auth_token: "Bearer ${GITHUB_TOKEN}"
+
+  - id: "nrp://home/sensor/temperature"
+    driver: "mqtt"
+    broker: "192.168.1.100"
+    topic: "home/sensors/+/temperature"
+
+logging:
+  level: "INFO"
