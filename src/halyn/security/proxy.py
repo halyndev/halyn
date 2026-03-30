@@ -140,8 +140,6 @@ class HalynProxy:
         """
         Apply shield rules. Returns (blocked, reason).
         
-        Note: PHY §2 (physical world irreversibility rule) belongs to BeeQ,
-        not Halyn. Halyn intercepts and audits. BeeQ decides based on PHY laws.
         Halyn shields are generic destructive pattern detection.
         """
         blocked_patterns = ["delete all", "rm -rf", "format disk", "drop database"]
