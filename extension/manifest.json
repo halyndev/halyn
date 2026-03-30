@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "Halyn — AI Governance",
+  "version": "1.0.0",
+  "description": "Halyn browser audit layer. Every agent action intercepted, logged, shielded.",
+  "author": "Elmadani SALKA <contact@halyn.dev>",
+
+  "permissions": [
+    "webRequest",
+    "declarativeNetRequest",
+    "storage",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "halyn_rules",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+
+  "action": {
+    "default_title": "Halyn — AI Governance"
+  },
+
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

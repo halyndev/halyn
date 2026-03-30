@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Halyn Logo: Shield + Signal + Nodes network -->
+  <!-- Recognizable at 16px and 512px. Blue on transparent. -->
+
+  <!-- Outer protection ring (the shield/halo) -->
+  <circle cx="256" cy="256" r="220" stroke="#3b82f6" stroke-width="6" opacity="0.12"/>
+  <circle cx="256" cy="256" r="180" stroke="#3b82f6" stroke-width="4" opacity="0.08"/>
+
+  <!-- Main broken arc (top) — the signature shape -->
+  <path d="M120 130 A180 180 0 0 1 392 130" stroke="#3b82f6" stroke-width="32" stroke-linecap="round" fill="none"/>
+
+  <!-- Side arcs (embrace) -->
+  <path d="M96 180 A200 200 0 0 0 96 360" stroke="#3b82f6" stroke-width="24" stroke-linecap="round" fill="none"/>
+  <path d="M416 180 A200 200 0 0 1 416 360" stroke="#3b82f6" stroke-width="24" stroke-linecap="round" fill="none"/>
+
+  <!-- Connection lines from center to device nodes -->
+  <line x1="256" y1="256" x2="130" y2="400" stroke="#3b82f6" stroke-width="3" opacity="0.3"/>
+  <line x1="256" y1="256" x2="256" y2="430" stroke="#3b82f6" stroke-width="3" opacity="0.3"/>
+  <line x1="256" y1="256" x2="382" y2="400" stroke="#3b82f6" stroke-width="3" opacity="0.3"/>
+
+  <!-- Device nodes (bottom) — the physical world -->
+  <circle cx="130" cy="400" r="16" fill="#3b82f6" opacity="0.7"/>
+  <circle cx="256" cy="430" r="16" fill="#3b82f6" opacity="0.7"/>
+  <circle cx="382" cy="400" r="16" fill="#3b82f6" opacity="0.7"/>
+
+  <!-- Central signal — the AI core -->
+  <circle cx="256" cy="240" r="48" fill="#3b82f6" opacity="0.1"/>
+  <circle cx="256" cy="240" r="32" fill="#3b82f6" opacity="0.15"/>
+  <circle cx="256" cy="240" r="18" fill="#3b82f6"/>
+
+  <!-- Shield chevron at center (the safety layer) -->
+  <path d="M240 228 L256 212 L272 228" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M240 244 L256 228 L272 244" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.5"/>
+</svg>

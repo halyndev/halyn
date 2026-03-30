@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.env
+.venv
+venv/
+*.db
+*.log
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+runtime/
+*.db-shm
+*.db-wal
+*.db
+
+# Runtime data (generated at startup)
+runtime/*.db
+runtime/*.db-shm
+runtime/*.db-wal
+runtime/

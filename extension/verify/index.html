@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Halyn — Audit Chain Verifier</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0b0d10;--bg2:#13161b;--bg3:#1a1e27;
+  --fg:#e1e4ea;--fg2:#8b919e;--fg3:#5c6370;
+  --green:#3ddc84;--green-bg:#0f2318;--green-border:#1a3a28;
+  --red:#ef4444;--red-bg:#2a1215;--red-border:#4a1c20;
+  --border:#1e2330;
+  --font:system-ui,sans-serif;--mono:"IBM Plex Mono","Courier New",monospace;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between}
+header h1{font-size:1rem;font-weight:700}.logo span{color:var(--green)}
+header nav a{font-size:.8rem;color:var(--fg2);text-decoration:none;margin-left:1.5rem}
+header nav a:hover{color:var(--green)}
+main{flex:1;max-width:760px;margin:0 auto;padding:3rem 1.5rem;width:100%}
+.hero{text-align:center;margin-bottom:3rem}
+.hero h2{font-size:1.8rem;font-weight:700;margin-bottom:.75rem;line-height:1.2}
+.hero h2 span{color:var(--green)}
+.hero p{color:var(--fg2);font-size:.95rem;line-height:1.6;max-width:480px;margin:0 auto}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1.5rem}
+.card h3{font-size:.8rem;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:1rem}
+.row{display:flex;gap:.5rem;margin-bottom:.5rem}
+input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--fg);padding:.6rem .8rem;border-radius:5px;font-family:var(--mono);font-size:.78rem;outline:none}
+input:focus{border-color:var(--green)}
+.btn{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);font-size:.78rem;font-family:var(--mono);font-weight:600;padding:.6rem 1rem;border-radius:5px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--green);color:#000}
+.btn:disabled{opacity:.4;cursor:default}
+.result{margin-top:1rem;display:none}
+.result.show{display:block}
+.rb{border-radius:6px;padding:1rem 1.2rem;font-family:var(--mono);font-size:.76rem;line-height:1.8}
+.rb.ok{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+.rb.fail{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+.rb.info{background:var(--bg3);border:1px solid var(--border);color:var(--fg2)}
+.f{display:grid;grid-template-columns:150px 1fr;gap:.2rem;font-size:.73rem}
+.fk{color:var(--fg3)}.fv{word-break:break-all}.fv.ok{color:var(--green)}.fv.fail{color:var(--red)}
+.elist{max-height:260px;overflow-y:auto;margin-top:.75rem;border-top:1px solid var(--border);padding-top:.5rem}
+.erow{display:grid;grid-template-columns:55px 1fr 48px 105px;gap:.5rem;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.68rem;font-family:var(--mono);align-items:center}
+.erow:last-child{border-bottom:none}
+.et{color:var(--fg3)}.etool{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ob{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);padding:1px 5px;border-radius:3px;font-size:.6rem;font-weight:700}
+.fb{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);padding:1px 5px;border-radius:3px;font-size:.6rem;font-weight:700}
+.eh{color:var(--fg3);font-size:.62rem;text-align:right;overflow:hidden;text-overflow:ellipsis}
+.how{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:1.5rem}
+.how h3{font-size:.8rem;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:1rem}
+.step{display:flex;gap:.9rem;margin-bottom:.9rem;align-items:flex-start;font-size:.84rem;line-height:1.6;color:var(--fg2)}
+.sn{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);font-family:var(--mono);font-size:.68rem;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.2rem}
+code{color:var(--fg);background:var(--bg3);padding:1px 5px;border-radius:3px;font-family:var(--mono);font-size:.76rem}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:.85rem 2rem;display:flex;justify-content:space-between;align-items:center}
+footer p{font-size:.72rem;color:var(--fg3)}footer a{color:var(--fg2);text-decoration:none;font-size:.72rem}
+footer a:hover{color:var(--green)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+<header>
+  <h1 class="logo">⬡ <span>Halyn</span> — Audit Verifier</h1>
+  <nav>
+    <a href="https://halyn.dev">halyn.dev</a>
+    <a href="https://github.com/halyndev/halyn">GitHub</a>
+  </nav>
+</header>
+<main>
+  <div class="hero">
+    <h2>Verify the <span>audit chain</span><br>of any Halyn instance</h2>
+    <p>Halyn records every AI action in a SHA-256 hash chain. Tamper with one entry and the entire chain breaks. Enter your instance URL to verify.</p>
+  </div>
+
+  <div class="card">
+    <h3>Verify Instance</h3>
+    <div class="row">
+      <input type="text" id="url-in" placeholder="http://localhost:7420" value="http://localhost:7420" />
+      <button class="btn" id="vbtn" onclick="verifyInstance()">Verify</button>
+    </div>
+    <div class="result" id="url-res"></div>
+  </div>
+
+  <div class="card">
+    <h3>Verify Single Entry (browser-side SHA-256)</h3>
+    <div class="row"><input id="hash-in" placeholder="SHA-256 hash (64 hex chars)" /></div>
+    <div class="row">
+      <input id="prev-in" placeholder="prev_hash (or GENESIS)" />
+      <input id="tool-in" placeholder="tool" style="max-width:160px" />
+    </div>
+    <div class="row">
+      <input id="ts-in"     placeholder="timestamp (float)" style="max-width:140px" />
+      <input id="node-in"   placeholder="node" style="max-width:140px" />
+      <input id="status-in" placeholder="status" style="max-width:110px" />
+      <button class="btn" onclick="verifyHash()">Check</button>
+    </div>
+    <div class="result" id="hash-res"></div>
+  </div>
+
+  <div class="how">
+    <h3>How the chain works</h3>
+    <div class="step"><div class="sn">1</div><p>Every action is recorded: <code>tool</code>, <code>node</code>, <code>args</code>, <code>result</code>, <code>status</code>, <code>timestamp</code>.</p></div>
+    <div class="step"><div class="sn">2</div><p>Each entry is hashed: <code>SHA-256(ts|tool|node|args|result|status|prev_hash)</code>. The previous hash is always chained in.</p></div>
+    <div class="step"><div class="sn">3</div><p>Chain starts at <code>GENESIS</code>. Any modification to any past entry invalidates all subsequent hashes — O(n) tamper detection.</p></div>
+    <div class="step"><div class="sn">4</div><p>Verify via <code>GET /audit/verify</code>. Retrieve entries with <code>GET /audit</code>. Run continuous verification with <code>halyn redteam</code>.</p></div>
+  </div>
+</main>
+<footer>
+  <p>© 2026 Elmadani SALKA · BUSL-1.1</p>
+  <a href="https://halyn.dev">halyn.dev</a>
+</footer>
+<script>
+function show(id, cls, html) {
+  var el = document.getElementById(id);
+  el.className = "result show";
+  el.innerHTML = "<div class=\"rb " + cls + "\">" + html + "</div>";
+}
+function f(k, v, vc) {
+  return "<div class=\"f\"><span class=\"fk\">" + k + "</span><span class=\"fv " + (vc||"") + "\">" + v + "</span></div>";
+}
+
+async function verifyInstance() {
+  var url = document.getElementById("url-in").value.trim().replace(/\/$/, "");
+  var btn = document.getElementById("vbtn");
+  btn.disabled = true; btn.textContent = "Verifying...";
+  try {
+    var [vr, ar, hr] = await Promise.all([
+      fetch(url + "/audit/verify").then(function(r){return r.json()}),
+      fetch(url + "/audit?limit=20").then(function(r){return r.json()}),
+      fetch(url + "/health").then(function(r){return r.json()}),
+    ]);
+    var valid = vr.valid;
+    var tip = (ar.chain_tip||"GENESIS").slice(0,16) + "...";
+    var html = "";
+    html += f("Status", valid ? "CHAIN VALID" : "CHAIN BROKEN", valid ? "ok" : "fail");
+    html += f("Entries checked", vr.entries_checked || 0);
+    html += f("Message", vr.message || "—");
+    html += f("Chain tip", tip);
+    html += f("Nodes", hr.nodes || 0);
+    html += f("Emergency stop", hr.emergency_stop ? "YES" : "no", hr.emergency_stop ? "fail" : "ok");
+    html += f("Running", hr.running ? "yes" : "NO", hr.running ? "ok" : "fail");
+    if (ar.entries && ar.entries.length > 0) {
+      html += "<div class=\"elist\">";
+      ar.entries.slice().reverse().forEach(function(e) {
+        var badge = e.result_ok ? "<span class=\"ob\">OK</span>" : "<span class=\"fb\">FAIL</span>";
+        var t = e.timestamp ? new Date(e.timestamp*1000).toTimeString().slice(0,8) : "—";
+        var hash = e.hash ? e.hash.slice(0,10)+"…" : "—";
+        html += "<div class=\"erow\"><span class=\"et\">" + t + "</span><span class=\"etool\">" + (e.tool||"—") + "</span>" + badge + "<span class=\"eh\">" + hash + "</span></div>";
+      });
+      html += "</div>";
+    }
+    show("url-res", valid ? "ok" : "fail", html);
+  } catch(e) {
+    show("url-res", "fail",
+      f("Error", e.message) +
+      "<br><small style=\"color:var(--fg3)\">Halyn must be running at that URL with CORS allowed, or access from the same machine.</small>");
+  }
+  btn.disabled = false; btn.textContent = "Verify";
+}
+
+async function verifyHash() {
+  var hash   = document.getElementById("hash-in").value.trim();
+  var prev   = document.getElementById("prev-in").value.trim() || "GENESIS";
+  var tool   = document.getElementById("tool-in").value.trim();
+  var ts     = document.getElementById("ts-in").value.trim();
+  var node   = document.getElementById("node-in").value.trim();
+  var status = document.getElementById("status-in").value.trim();
+  if (!hash || hash.length !== 64) {
+    show("hash-res", "fail", f("Error", "Hash must be 64 hex characters")); return;
+  }
+  try {
+    var payload = [ts, tool, node, "{}", "", status, prev].join("|");
+    var enc = new TextEncoder().encode(payload);
+    var buf = await crypto.subtle.digest("SHA-256", enc);
+    var computed = Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0")}).join("");
+    var match = computed === hash;
+    var html = "";
+    html += f("Input hash",    hash.slice(0,16)+"…");
+    html += f("Computed hash", computed.slice(0,16)+"…");
+    html += f("Match", match ? "YES — verified" : "NO — mismatch", match ? "ok" : "fail");
+    html += f("Payload", payload.slice(0,120));
+    html += "<br><small style=\"color:var(--fg3)\">Args/result fields approximated as empty. Use /audit/verify for exact chain verification.</small>";
+    show("hash-res", match ? "ok" : "fail", html);
+  } catch(e) {
+    show("hash-res", "fail", f("Error", e.message));
+  }
+}
+
+window.addEventListener("load", function() {
+  setTimeout(function() {
+    fetch("http://localhost:7420/health", {signal: AbortSignal.timeout(2000)})
+      .then(function(){verifyInstance()}).catch(function(){});
+  }, 600);
+});
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("url-in").addEventListener("keydown", function(e){ if(e.key==="Enter") verifyInstance(); });
+});
+</script>
+</body>
+</html>

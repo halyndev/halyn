@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>ExtensionInstallForcelist</key>
+  <array>
+    <string>EXTENSION_ID;https://clients2.google.com/service/update2/crx</string>
+  </array>
+  <key>ExtensionSettings</key>
+  <dict>
+    <key>EXTENSION_ID</key>
+    <dict>
+      <key>installation_mode</key>
+      <string>force_installed</string>
+      <key>update_url</key>
+      <string>https://clients2.google.com/service/update2/crx</string>
+      <key>toolbar_pin</key>
+      <string>force_pinned</string>
+    </dict>
+  </dict>
+</dict>
+</plist>

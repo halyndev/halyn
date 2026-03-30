@@ -1,0 +1,56 @@
+[project]
+name = "halyn"
+version = "2.2.4"
+description = "Halyn — The governance layer for AI agents. Every action intercepted. Every decision auditable."
+requires-python = ">=3.10"
+license = {text = "BUSL-1.1"}
+authors = [{name = "Elmadani SALKA", email = "contact@halyn.dev"}]
+readme = "README.md"
+keywords = [
+  "ai", "agents", "governance", "accountability", "audit",
+  "mcp", "security", "aap", "nrp", "iot", "robotics"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security",
+    "Topic :: System :: Systems Administration",
+]
+dependencies = [
+    "aiohttp>=3.9",
+]
+
+[project.optional-dependencies]
+iot     = ["paho-mqtt"]
+dev     = ["pytest", "pytest-asyncio", "mypy", "ruff"]
+
+[project.urls]
+Homepage      = "https://halyn.dev"
+Repository    = "https://github.com/halyndev/halyn"
+Issues        = "https://github.com/halyndev/halyn/issues"
+Documentation = "https://halyn.dev/docs"
+Changelog     = "https://github.com/halyndev/halyn/blob/main/CHANGELOG.md"
+
+[project.scripts]
+halyn = "halyn.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+halyn = ["py.typed"]
+
+[build-system]
+requires = ["setuptools>=61,<77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
